@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>T2 City Pulse — демо, Тюмень</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{--bg:#F6F5F7;--ink:#15121A;--mut:#6B6572;--card:#fff;--line:#E3DFE8;--road:#fff;--roadl:#D9D4DE;--block:#E9E6EE;--park:#CDEBD9;--water:#CFE3F5;--acc:#FF2E8B;--good:#17956B;--mid:#D98E04;--bad:#D91E4A;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111015;--ink:#F3F1F6;--mut:#A29BAD;--card:#1C1A22;--line:#2E2A36;--road:#3A3644;--roadl:#2A2630;--block:#1A1820;--park:#1D3A2C;--water:#16314A;--good:#35C795;--mid:#F0B33C;--bad:#FF5C7F;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111015;--ink:#F3F1F6;--mut:#A29BAD;--card:#1C1A22;--line:#2E2A36;--road:#3A3644;--roadl:#2A2630;--block:#1A1820;--park:#1D3A2C;--water:#16314A;--good:#35C795;--mid:#F0B33C;--bad:#FF5C7F;color-scheme:dark}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Onest,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:0 14px 28px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0 8px}
+h1{font:700 17px/1.1 Unbounded,Onest,sans-serif;margin:0;letter-spacing:-.01em}
+h1 span{color:var(--acc)}
+.sub{color:var(--mut);font-size:12.5px;margin-top:4px}
+.bonus{font-size:12.5px;border:1px solid var(--line);background:var(--card);border-radius:20px;padding:5px 10px;white-space:nowrap}
+.demo{background:var(--card);border:1px dashed var(--mid);color:var(--mut);border-radius:10px;padding:6px 10px;font-size:12.5px;margin:4px 0 10px}
+.tabs{display:flex;gap:6px;margin-bottom:10px}
+.tabs button,.chips button{font:500 13.5px Onest,sans-serif;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:8px 13px;cursor:pointer}
+.tabs button[aria-selected=true],.chips button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,input:focus-visible,.pt:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.chips button{flex:none}
+.mapbox{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--block)}
+svg{display:block;width:100%;height:auto}
+.lbl{font:500 8px Onest,sans-serif;fill:var(--mut)}
+.mk text{font:700 11px Unbounded,Onest,sans-serif;fill:#fff;text-anchor:middle;pointer-events:none}
+.pt{cursor:pointer}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--mut);padding:8px 2px;flex-wrap:wrap}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.time{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-top:6px}
+.time b{font-weight:600}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.ticks{display:flex;justify-content:space-between;font-size:12px;color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px}
+.card h2{font:600 16px/1.2 Onest,sans-serif;margin:0 0 2px}
+.row{display:flex;gap:14px;align-items:center;margin:10px 0}
+.big{font:700 38px/1 Unbounded,sans-serif;min-width:72px}
+.bars{flex:1;display:grid;gap:5px}
+.bar{display:grid;grid-template-columns:92px 1fr 30px;gap:6px;align-items:center;font-size:12.5px;color:var(--mut)}
+.bar div{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.bar div i{display:block;height:100%}
+.bar span:last-child{text-align:right;color:var(--ink)}
+.note{border-left:3px solid var(--acc);padding:2px 0 2px 10px;margin:8px 0}
+.alert{border-left-color:var(--bad)}
+.ok{background:var(--acc);color:#fff;border:0;border-radius:10px;font:600 14px Onest,sans-serif;padding:10px 14px;cursor:pointer;width:100%;margin-top:6px}
+.ok:disabled{background:var(--line);color:var(--mut);cursor:default}
+.mut{color:var(--mut);font-size:13px}
+.list button{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;background:none;border:0;border-top:1px solid var(--line);padding:9px 0;cursor:pointer}
+.list b{font:700 13px Unbounded,sans-serif;color:#fff;border-radius:8px;text-align:center;padding:6px 0}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.kpi div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.kpi strong{font:700 20px Unbounded,sans-serif;display:block}
+.kpi span{font-size:12px;color:var(--mut)}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:no-preference){.pulse{animation:p 2s ease-out infinite}@keyframes p{from{r:15;opacity:.6}to{r:27;opacity:0}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><h1>T2 City <span>Pulse</span></h1><div class="sub">Тюмень, район корпусов ТюмГУ</div></div>
+  <div class="bonus" id="bonus">Бонусы: 0 МБ</div>
+</header>
+<div class="demo">Демо-данные: симуляция для презентации, не показатели реальных камер и сети T2.</div>
+<div class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-tab="map">Карта</button>
+  <button role="tab" aria-selected="false" data-tab="city">Для города</button>
+</div>
+
+<section id="tmap">
+  <div class="chips" id="chips"></div>
+  <div class="mapbox">
+  <svg viewBox="0 0 360 380" role="img" aria-label="Схема центра Тюмени вокруг ТюмГУ">
+    <defs><radialGradient id="hg"><stop offset="0" stop-color="#FF2E8B" stop-opacity=".75"/><stop offset="1" stop-color="#FF2E8B" stop-opacity="0"/></radialGradient></defs>
+    <rect width="360" height="380" fill="var(--block)"/>
+    <path d="M-10 335C90 300 220 372 370 322L370 390L-10 390Z" fill="var(--water)"/>
+    <text class="lbl" x="268" y="368">р. Тура</text>
+    <rect x="18" y="168" width="122" height="72" rx="8" fill="var(--park)"/>
+    <text class="lbl" x="24" y="180">Цветной бульвар</text>
+    <rect x="162" y="168" width="76" height="72" rx="6" fill="none" stroke="var(--acc)" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <g fill="var(--roadl)"><rect x="170" y="176" width="26" height="26" rx="3"/><rect x="204" y="176" width="26" height="26" rx="3"/><rect x="170" y="208" width="60" height="24" rx="3"/><rect x="262" y="172" width="80" height="26" rx="3"/><rect x="262" y="206" width="80" height="26" rx="3"/><rect x="18" y="30" width="60" height="100" rx="3"/><rect x="88" y="30" width="52" height="100" rx="3"/><rect x="162" y="30" width="76" height="100" rx="3"/><rect x="262" y="30" width="80" height="100" rx="3"/><rect x="18" y="268" width="122" height="34" rx="3"/><rect x="162" y="268" width="76" height="34" rx="3"/><rect x="262" y="268" width="80" height="30" rx="3"/></g>
+    <g stroke="var(--road)" stroke-width="10" fill="none" stroke-linecap="round"><path d="M0 150H360"/><path d="M0 250H360"/><path d="M150 0V330"/><path d="M250 0V320"/></g>
+    <text class="lbl" x="6" y="147">ул. Республики</text><text class="lbl" x="6" y="247">ул. Володарского</text>
+    <text class="lbl" x="153" y="20">ул. Ленина</text><text class="lbl" x="253" y="20">ул. Семакова</text>
+    <text class="lbl" x="172" y="165" style="fill:var(--acc)">ТюмГУ</text>
+    <g id="heat"></g><g id="mk" class="mk"></g>
+  </svg>
+  </div>
+  <div class="legend"><span><i style="background:var(--good)"></i>комфортно</span><span><i style="background:var(--mid)"></i>терпимо</span><span><i style="background:var(--bad)"></i>проблема</span></div>
+  <div class="time">
+    <div><b>Время:</b> <span id="tl">сейчас</span></div>
+    <input type="range" id="tr" min="0" max="2" step="1" value="0" aria-label="Сдвиг времени">
+    <div class="ticks"><span>Сейчас</span><span>+15 мин</span><span>+30 мин</span></div>
+  </div>
+  <div class="card" id="card"><div class="mut">Нажмите на точку на схеме, чтобы увидеть индекс места, прогноз и статус сервисов.</div></div>
+</section>
+
+<section id="tcity" hidden>
+  <div class="kpi" id="kpi"></div>
+  <div class="card"><h2>Где инфраструктура не справляется</h2><div class="mut" style="margin-bottom:6px">Места по возрастанию индекса. Нажмите, чтобы открыть на карте.</div><div class="list" id="list"></div></div>
+  <div class="card"><h2>Для бизнеса</h2><p class="mut" style="margin:4px 0 0">Слой «Потоки» на карте показывает тепловые пятна: по ним видно, где людей много, а сервисов нет. Это основа для выбора места под кофейню, торговую точку или остановочный павильон.</p></div>
+</section>
+</div>
+
+<script>
+var L=[["score","Индекс места"],["conn","Связь"],["flow","Потоки"],["status","Состояние"],["alert","События"]];
+var P=[
+{n:"Остановка «ТюмГУ»",k:"Остановка",x:206,y:250,c:[78,74,70],f:[62,91,70],s:85,r:96,a:null,p:["Сейчас умеренно людно, места в транспорте есть.","Через 15 минут здесь будет час пик: заканчиваются пары в ТюмГУ. Выйдите на 10 минут раньше или дойдите до остановки «Республики».","Пик спадает, очередь на остановке рассасывается."]},
+{n:"Корпус ТюмГУ, Володарского",k:"Учебный корпус",x:200,y:206,c:[52,50,55],f:[55,80,60],s:90,r:88,a:null,p:["В холлах умеренная загрузка.","Конец пары: холл и гардероб заполнятся, связь внутри просядет.","Загрузка снижается."],e:"Indoor-покрытие в холле слабое: реальный замер T2, а не карта зон покрытия."},
+{n:"Подземный переход, Ленина",k:"Переход",x:150,y:150,c:[18,18,20],f:[30,45,35],s:55,r:80,a:"Не работают 2 светильника, подтверждено жителями.",p:["Проход свободен, но связь почти пропадает.","Поток вырастет, связь останется слабой. Лучше перейти по поверхности.","Поток нормализуется."]},
+{n:"Цветной бульвар",k:"Парк",x:80,y:206,c:[82,82,80],f:[25,30,28],s:92,r:90,a:null,p:["Спокойно, хорошая связь и освещение.","Спокойно, подходит для пешего маршрута в обход толпы.","Без изменений."],e:"Воздух: хороший. Шум: 48 дБ."},
+{n:"Набережная Туры",k:"Набережная",x:190,y:304,c:[70,70,68],f:[20,22,20],s:88,r:85,a:null,p:["Свободно, ветрено.","Свободно.","Свободно."],e:"Воздух: хороший. Шум: 42 дБ."},
+{n:"Остановка «Республики»",k:"Остановка",x:60,y:150,c:[85,85,84],f:[30,45,40],s:90,r:92,a:null,p:["Людей немного, ждать недолго.","Небольшой рост потока из-за соседней остановки.","Спокойно."]},
+{n:"Зарядная станция у корпуса",k:"Сервис",x:236,y:190,c:[80,80,80],f:[10,12,10],s:25,r:60,a:"Станция не отвечает. ИИ видит её на камере и просит подтвердить.",p:["Свободна, но, вероятно, неисправна.","Без изменений.","Без изменений."]},
+{n:"Вход с пандусом и лифтом",k:"Доступная среда",x:170,y:226,c:[60,58,60],f:[15,15,15],s:30,r:70,a:"Лифт не работает. Для маломобильных граждан доступен только пандус.",p:["Пандус свободен, лифт недоступен.","Без изменений.","Без изменений."]},
+{n:"Парковка у корпуса",k:"Парковка",x:305,y:215,c:[75,75,74],f:[85,70,60],s:80,r:75,a:null,p:["Свободных мест почти нет.","Часть мест освободится после пар.","Свободных мест станет больше."]}
+];
+var st={l:"score",t:0,sel:null,b:0,ok:{}};
+var T=["сейчас","через 15 минут","через 30 минут"];
+function sc(p,t){return Math.round(.35*p.c[t]+.3*(100-p.f[t])+.2*p.s+.15*p.r)}
+function col(g){return g>=70?"var(--good)":g>=40?"var(--mid)":"var(--bad)"}
+function val(p){var t=st.t,l=st.l;
+ if(l=="score"){var s=sc(p,t);return{g:s,v:s}}
+ if(l=="conn")return{g:p.c[t],v:p.c[t]};
+ if(l=="flow")return{g:100-p.f[t],v:p.f[t]};
+ if(l=="status")return{g:p.s,v:p.s};
+ return p.a?{g:0,v:"!"}:{g:100,v:"–"}}
+function $(i){return document.getElementById(i)}
+function draw(){
+ var m="",h="";
+ P.forEach(function(p,i){var o=val(p),c=col(o.g),dim=(st.l=="alert"&&!p.a)?' opacity=".35"':"";
+  if(st.l=="flow")h+='<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(14+p.f[st.t]*.4)+'" fill="url(#hg)" opacity="'+(.25+p.f[st.t]/130)+'"/>';
+  m+='<g class="pt" tabindex="0" role="button" data-i="'+i+'" aria-label="'+p.n+', '+o.v+'"'+dim+'>'+(st.sel===i?'<circle class="pulse" cx="'+p.x+'" cy="'+p.y+'" r="15" fill="none" stroke="'+c+'" stroke-width="2"/>':"")+'<circle cx="'+p.x+'" cy="'+p.y+'" r="14" fill="'+c+'" stroke="var(--card)" stroke-width="2.5"/><text x="'+p.x+'" y="'+(p.y+4)+'">'+o.v+'</text></g>'});
+ $("mk").innerHTML=m;$("heat").innerHTML=h;
+ $("chips").innerHTML=L.map(function(a){return '<button aria-pressed="'+(st.l==a[0])+'" data-l="'+a[0]+'">'+a[1]+'</button>'}).join("");
+ card();city()}
+function bar(n,v,g){return '<div class="bar"><span>'+n+'</span><div><i style="width:'+v+'%;background:'+col(g)+'"></i></div><span>'+v+'</span></div>'}
+function card(){var i=st.sel;if(i===null)return;var p=P[i],t=st.t,s=sc(p,t),
+ need=p.s<60&&!st.ok[i];
+ $("card").innerHTML='<h2>'+p.n+'</h2><div class="mut">'+p.k+', '+T[t]+'</div><div class="row"><div class="big" style="color:'+col(s)+'">'+s+'</div><div class="bars">'+bar("Связь",p.c[t],p.c[t])+bar("Свободно",100-p.f[t],100-p.f[t])+bar("Состояние",p.s,p.s)+bar("Актуальность",p.r,p.r)+'</div></div>'
+ +'<div class="note">'+p.p[t]+'</div>'+(p.e?'<div class="note">'+p.e+'</div>':"")+(p.a?'<div class="note alert">'+p.a+'</div>':"")
+ +(p.s<60?'<button class="ok" id="cf"'+(need?"":" disabled")+'>'+(need?"Подтвердить (+500 МБ)":"Спасибо, +500 МБ начислено")+'</button>':"")
+ +'<div class="mut" style="margin-top:8px">Индекс = связь 35%, свобода от толпы 30%, состояние сервисов 20%, актуальность данных 15%.</div>'}
+function city(){
+ var a=P.map(function(p,i){return{i:i,s:sc(p,st.t),p:p}}).sort(function(x,y){return x.s-y.s}),
+ avg=Math.round(a.reduce(function(n,x){return n+x.s},0)/a.length),
+ al=P.filter(function(p){return p.a}).length,
+ pk=Math.max.apply(null,P.map(function(p){return p.f[st.t]}));
+ $("kpi").innerHTML='<div><strong>'+avg+'</strong><span>средний индекс района</span></div><div><strong>'+al+'</strong><span>активных события</span></div><div><strong>'+pk+'%</strong><span>пик загрузки</span></div>';
+ $("list").innerHTML=a.map(function(x){return '<button data-go="'+x.i+'"><b style="background:'+col(x.s)+'">'+x.s+'</b><span>'+x.p.n+'<br><span class="mut">'+(x.p.a||x.p.p[st.t])+'</span></span></button>'}).join("")}
+function tab(n){["map","city"].forEach(function(k){$("t"+k).hidden=k!=n});
+ document.querySelectorAll("[data-tab]").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab==n)})}
+document.addEventListener("click",function(e){
+ var b=e.target.closest("[data-tab],[data-l],[data-go],.pt,#cf");if(!b)return;
+ if(b.dataset.tab)tab(b.dataset.tab);
+ else if(b.dataset.l){st.l=b.dataset.l;draw()}
+ else if(b.dataset.go){tab("map");st.sel=+b.dataset.go;draw();$("card").scrollIntoView({behavior:"smooth",block:"nearest"})}
+ else if(b.id=="cf"){st.ok[st.sel]=1;st.b+=500;$("bonus").textContent="Бонусы: "+st.b+" МБ";card()}
+ else if(b.dataset.i){st.sel=+b.dataset.i;draw()}});
+document.addEventListener("keydown",function(e){if((e.key=="Enter"||e.key==" ")&&e.target.classList&&e.target.classList.contains("pt")){e.preventDefault();e.target.dispatchEvent(new MouseEvent("click",{bubbles:true}))}});
+$("tr").addEventListener("input",function(){st.t=+this.value;$("tl").textContent=T[st.t];draw()});
+draw();
+</script>
+</body>
+</html>
