@@ -27,10 +27,10 @@ h1 span{color:var(--acc)}
 button:focus-visible,input:focus-visible,.pt:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
 .chips button{flex:none}
-.mapbox{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--block)}
+.mapbox{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--block)}.zoom{position:absolute;right:8px;top:8px;display:grid;gap:4px}.zoom button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 18px Onest,sans-serif;cursor:pointer}
 svg{display:block;width:100%;height:auto}
-.lbl{font:500 8px Onest,sans-serif;fill:var(--mut)}
-.mk text{font:700 11px Unbounded,Onest,sans-serif;fill:#fff;text-anchor:middle;pointer-events:none}
+.lbl{font:500 15px Onest,sans-serif;fill:var(--mut);paint-order:stroke;stroke:var(--block);stroke-width:3px}
+.mk text{font-family:Unbounded,Onest,sans-serif;font-weight:700;fill:#fff;text-anchor:middle;pointer-events:none}
 .pt{cursor:pointer}
 .legend{display:flex;gap:12px;font-size:12px;color:var(--mut);padding:8px 2px;flex-wrap:wrap}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
@@ -76,21 +76,29 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 <section id="tmap">
   <div class="chips" id="chips"></div>
   <div class="mapbox">
-  <svg viewBox="0 0 360 380" role="img" aria-label="Схема центра Тюмени вокруг ТюмГУ">
+  <svg id="sv" viewBox="60 -60 740 540" role="img" aria-label="Схема центра Тюмени: Цветной бульвар, ТюмГУ и набережная Туры">
     <defs><radialGradient id="hg"><stop offset="0" stop-color="#FF2E8B" stop-opacity=".75"/><stop offset="1" stop-color="#FF2E8B" stop-opacity="0"/></radialGradient></defs>
-    <rect width="360" height="380" fill="var(--block)"/>
-    <path d="M-10 335C90 300 220 372 370 322L370 390L-10 390Z" fill="var(--water)"/>
-    <text class="lbl" x="268" y="368">р. Тура</text>
-    <rect x="18" y="168" width="122" height="72" rx="8" fill="var(--park)"/>
-    <text class="lbl" x="24" y="180">Цветной бульвар</text>
-    <rect x="162" y="168" width="76" height="72" rx="6" fill="none" stroke="var(--acc)" stroke-width="1.5" stroke-dasharray="4 3"/>
-    <g fill="var(--roadl)"><rect x="170" y="176" width="26" height="26" rx="3"/><rect x="204" y="176" width="26" height="26" rx="3"/><rect x="170" y="208" width="60" height="24" rx="3"/><rect x="262" y="172" width="80" height="26" rx="3"/><rect x="262" y="206" width="80" height="26" rx="3"/><rect x="18" y="30" width="60" height="100" rx="3"/><rect x="88" y="30" width="52" height="100" rx="3"/><rect x="162" y="30" width="76" height="100" rx="3"/><rect x="262" y="30" width="80" height="100" rx="3"/><rect x="18" y="268" width="122" height="34" rx="3"/><rect x="162" y="268" width="76" height="34" rx="3"/><rect x="262" y="268" width="80" height="30" rx="3"/></g>
-    <g stroke="var(--road)" stroke-width="10" fill="none" stroke-linecap="round"><path d="M0 150H360"/><path d="M0 250H360"/><path d="M150 0V330"/><path d="M250 0V320"/></g>
-    <text class="lbl" x="6" y="147">ул. Республики</text><text class="lbl" x="6" y="247">ул. Володарского</text>
-    <text class="lbl" x="153" y="20">ул. Ленина</text><text class="lbl" x="253" y="20">ул. Семакова</text>
-    <text class="lbl" x="172" y="165" style="fill:var(--acc)">ТюмГУ</text>
+    <rect x="-40" y="-100" width="1120" height="640" fill="var(--block)"/>
+    <path d="M690 400C770 352 890 308 1030 268L1080 256L1080 345C960 352 905 390 885 540L690 540Z" fill="var(--water)"/>
+    <path d="M682 540L685 382C765 334 885 291 1030 250L1080 238" stroke="var(--park)" stroke-width="14" fill="none"/>
+    <path d="M682 540L685 382C765 334 885 291 1030 250L1080 238" stroke="var(--road)" stroke-width="3" stroke-dasharray="8 3" fill="none"/>
+    <g id="bg" fill="var(--roadl)"></g>
+    <g fill="var(--park)"><rect x="68" y="62" width="270" height="90" rx="10"/><rect x="100" y="172" width="150" height="56" rx="6"/><rect x="270" y="172" width="58" height="56" rx="6"/><rect x="120" y="250" width="208" height="80" rx="6"/><rect x="628" y="170" width="96" height="60" rx="6"/><rect x="640" y="246" width="130" height="68" rx="6"/></g>
+    <ellipse cx="160" cy="86" rx="16" ry="10" fill="var(--water)"/>
+    <path d="M70 150C130 120 220 110 336 70M200 64V150M70 108H336" stroke="var(--road)" stroke-width="3" fill="none"/>
+    <circle cx="308" cy="102" r="15" fill="var(--roadl)"/>
+    <g id="trs"></g>
+    <g stroke="var(--road)" fill="none" stroke-linecap="round"><g stroke-width="5"><path d="M-100 -6H1100"/><path d="M-100 52H1100"/><path d="M505 105H1100"/><path d="M-100 366H690"/><path d="M-100 444H680"/><path d="M420 -100V160"/><path d="M600 -100V440"/><path d="M700 -100V160"/><path d="M797 -100V330"/></g><path d="M337 160V540" stroke-width="7"/><g stroke-width="10"><path d="M-100 160H1100"/><path d="M-100 238H1100"/><path d="M522 -100L497 70V540"/></g></g>
+    <g stroke="var(--roadl)" stroke-width="1" stroke-dasharray="6 5" fill="none"><path d="M-100 160H1100"/><path d="M-100 238H1100"/><path d="M522 -100L497 70V540"/></g>
+    <path d="M-100 238H1100" stroke="var(--acc)" stroke-width="2" stroke-dasharray="1 6" stroke-linecap="round" fill="none" opacity=".75"/>
+    <rect x="640" y="246" width="130" height="68" rx="6" fill="none" stroke="var(--acc)" stroke-width="2" stroke-dasharray="6 4"/>
+    <text class="lbl" x="120" y="155">Ленина</text><text class="lbl" x="860" y="155">Ленина</text><text class="lbl" x="120" y="233">Республики</text><text class="lbl" x="800" y="233">Республики</text><text class="lbl" x="140" y="46">Герцена</text><text class="lbl" x="530" y="99">Урицкого</text><text class="lbl" x="380" y="361">Хохрякова</text>
+    <text class="lbl" transform="translate(489 330) rotate(-90)">Челюскинцев</text><text class="lbl" transform="translate(789 280) rotate(-90)">Красина</text><text class="lbl" transform="translate(412 135) rotate(-90)">Дзержинского</text>
+    <text class="lbl" x="122" y="138" style="font-size:20px">Цветной бульвар</text><text class="lbl" x="288" y="132" style="font-size:13px">Цирк</text><text class="lbl" x="104" y="204" style="font-size:13px">сквер Сибирских кошек</text>
+    <text class="lbl" x="640" y="338" style="font-size:20px;font-weight:700;fill:var(--acc)">ТюмГУ</text><text class="lbl" x="930" y="352" style="font-style:italic">р. Тура</text><text class="lbl" x="835" y="284" style="font-size:13px">Набережная Туры</text>
     <g id="heat"></g><g id="mk" class="mk"></g>
   </svg>
+  <div class="zoom"><button data-z="1" aria-label="Приблизить">+</button><button data-z="-1" aria-label="Отдалить">−</button></div>
   </div>
   <div class="legend"><span><i style="background:var(--good)"></i>комфортно</span><span><i style="background:var(--mid)"></i>терпимо</span><span><i style="background:var(--bad)"></i>проблема</span></div>
   <div class="time">
@@ -111,15 +119,26 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 <script>
 var L=[["score","Индекс места"],["conn","Связь"],["flow","Потоки"],["status","Состояние"],["alert","События"]];
 var P=[
-{n:"Остановка «ТюмГУ»",k:"Остановка",x:206,y:250,c:[78,74,70],f:[62,91,70],s:85,r:96,a:null,p:["Сейчас умеренно людно, места в транспорте есть.","Через 15 минут здесь будет час пик: заканчиваются пары в ТюмГУ. Выйдите на 10 минут раньше или дойдите до остановки «Республики».","Пик спадает, очередь на остановке рассасывается."]},
-{n:"Корпус ТюмГУ, Володарского",k:"Учебный корпус",x:200,y:206,c:[52,50,55],f:[55,80,60],s:90,r:88,a:null,p:["В холлах умеренная загрузка.","Конец пары: холл и гардероб заполнятся, связь внутри просядет.","Загрузка снижается."],e:"Indoor-покрытие в холле слабое: реальный замер T2, а не карта зон покрытия."},
-{n:"Подземный переход, Ленина",k:"Переход",x:150,y:150,c:[18,18,20],f:[30,45,35],s:55,r:80,a:"Не работают 2 светильника, подтверждено жителями.",p:["Проход свободен, но связь почти пропадает.","Поток вырастет, связь останется слабой. Лучше перейти по поверхности.","Поток нормализуется."]},
-{n:"Цветной бульвар",k:"Парк",x:80,y:206,c:[82,82,80],f:[25,30,28],s:92,r:90,a:null,p:["Спокойно, хорошая связь и освещение.","Спокойно, подходит для пешего маршрута в обход толпы.","Без изменений."],e:"Воздух: хороший. Шум: 48 дБ."},
-{n:"Набережная Туры",k:"Набережная",x:190,y:304,c:[70,70,68],f:[20,22,20],s:88,r:85,a:null,p:["Свободно, ветрено.","Свободно.","Свободно."],e:"Воздух: хороший. Шум: 42 дБ."},
-{n:"Остановка «Республики»",k:"Остановка",x:60,y:150,c:[85,85,84],f:[30,45,40],s:90,r:92,a:null,p:["Людей немного, ждать недолго.","Небольшой рост потока из-за соседней остановки.","Спокойно."]},
-{n:"Зарядная станция у корпуса",k:"Сервис",x:236,y:190,c:[80,80,80],f:[10,12,10],s:25,r:60,a:"Станция не отвечает. ИИ видит её на камере и просит подтвердить.",p:["Свободна, но, вероятно, неисправна.","Без изменений.","Без изменений."]},
-{n:"Вход с пандусом и лифтом",k:"Доступная среда",x:170,y:226,c:[60,58,60],f:[15,15,15],s:30,r:70,a:"Лифт не работает. Для маломобильных граждан доступен только пандус.",p:["Пандус свободен, лифт недоступен.","Без изменений.","Без изменений."]},
-{n:"Парковка у корпуса",k:"Парковка",x:305,y:215,c:[75,75,74],f:[85,70,60],s:80,r:75,a:null,p:["Свободных мест почти нет.","Часть мест освободится после пар.","Свободных мест станет больше."]}
+{n:"Остановка «ТюмГУ»",k:"Остановка",x:590,y:238,c:[78,74,70],f:[62,91,70],s:85,r:96,a:null,p:["Сейчас умеренно людно, места в транспорте есть.","Через 15 минут здесь будет час пик: заканчиваются пары в ТюмГУ. Выйдите на 10 минут раньше или дойдите до остановки «Республики».","Пик спадает, очередь на остановке рассасывается."]},
+{n:"Корпус ТюмГУ",k:"Учебный корпус",x:685,y:290,c:[52,50,55],f:[55,80,60],s:90,r:88,a:null,p:["В холлах умеренная загрузка.","Конец пары: холл и гардероб заполнятся, связь внутри просядет.","Загрузка снижается."],e:"Indoor-покрытие слабое."},
+{n:"Подземный переход, Республики",k:"Переход",x:497,y:238,c:[18,18,20],f:[30,45,35],s:55,r:80,a:"Не работают 2 светильника, подтверждено жителями.",p:["Проход свободен, но связь почти пропадает.","Поток вырастет, связь останется слабой. Лучше перейти по поверхности.","Поток нормализуется."]},
+{n:"Цветной бульвар",k:"Парк",x:215,y:108,c:[82,82,80],f:[25,30,28],s:92,r:90,a:null,p:["Спокойно, хорошая связь и освещение.","Спокойно, подходит для пешего маршрута в обход толпы.","Без изменений."],e:"Воздух: хороший. Шум: 48 дБ."},
+{n:"Набережная Туры",k:"Набережная",x:767,y:340,c:[70,70,68],f:[20,22,20],s:88,r:85,a:null,p:["Свободно, ветрено.","Свободно.","Свободно."],e:"Воздух: хороший. Шум: 42 дБ."},
+{n:"Остановка «Республики»",k:"Остановка",x:360,y:238,c:[85,85,84],f:[30,45,40],s:90,r:92,a:null,p:["Людей немного, ждать недолго.","Небольшой рост потока из-за соседней остановки.","Спокойно."]},
+{n:"Зарядная станция у корпуса",k:"Сервис",x:728,y:262,c:[80,80,80],f:[10,12,10],s:25,r:60,a:"Станция не отвечает. ИИ видит её на камере и просит подтвердить.",p:["Свободна, но, вероятно, неисправна.","Без изменений.","Без изменений."]},
+{n:"Вход с пандусом и лифтом",k:"Доступная среда",x:645,y:256,c:[60,58,60],f:[15,15,15],s:30,r:70,a:"Лифт не работает. Для маломобильных граждан доступен только пандус.",p:["Пандус свободен, лифт недоступен.","Без изменений.","Без изменений."]},
+{n:"Парковка у корпуса",k:"Парковка",x:782,y:284,c:[75,75,74],f:[85,70,60],s:80,r:75,a:null,p:["Свободных мест почти нет.","Часть мест освободится после пар.","Свободных мест станет больше."]},
+{n:"Площадь у цирка",k:"Общественное пространство",x:270,y:128,c:[76,76,74],f:[40,55,45],s:85,r:82,a:null,p:["Вечерняя прогулка: людей умеренно.","К вечеру ожидается рост: после работы бульвар заполнится.","Поток держится на среднем уровне."]},
+{n:"Остановка «Цветной бульвар»",k:"Остановка",x:140,y:160,c:[80,80,78],f:[35,40,50],s:88,r:90,a:null,p:["Людей немного, ждать недолго.","Подходит несколько маршрутов, поток растёт.","Рост сохраняется."]},
+{n:"Пруд на бульваре",k:"Парк",x:150,y:112,c:[78,78,78],f:[15,18,16],s:90,r:86,a:null,p:["Тихо и спокойно.","Без изменений.","Без изменений."],e:"Воздух: хороший. Шум: 44 дБ."},
+{n:"Перекрёсток Ленина и Челюскинцев",k:"Перекрёсток",x:497,y:160,c:[72,70,70],f:[70,88,72],s:70,r:84,a:"Временный ремонт тротуара, обход по западной стороне.",p:["Плотный пешеходный поток.","Час пик: в районе заканчиваются пары, на переходе будет очередь.","Поток снижается."]},
+{n:"Сквер Сибирских кошек",k:"Сквер",x:200,y:200,c:[70,70,68],f:[22,25,24],s:88,r:80,a:null,p:["Спокойно, есть свободные скамейки.","Без изменений.","Без изменений."],e:"Воздух: хороший. Шум: 52 дБ."},
+{n:"Парковка, Ленина и Челюскинцев",k:"Парковка",x:410,y:195,c:[74,74,72],f:[90,80,65],s:82,r:78,a:null,p:["Свободных мест почти нет.","Часть мест освободится после пар.","Свободных мест станет больше."]},
+{n:"Кофейни на Хохрякова",k:"Бизнес-квартал",x:420,y:345,c:[68,68,66],f:[30,60,55],s:85,r:80,a:null,p:["Спокойно, в кофейнях есть места.","Студенты пойдут с пар: хороший момент для партнёрских предложений.","Поток держится."]},
+{n:"Магазин «Мир»",k:"Indoor-зона",x:545,y:305,c:[40,38,40],f:[45,60,50],s:80,r:70,a:null,p:["Умеренная загрузка.","Загрузка вырастет.","Загрузка снижается."],e:"Indoor-покрытие слабое."},
+{n:"Остановка «Красина»",k:"Остановка",x:810,y:232,c:[82,80,80],f:[35,50,45],s:90,r:88,a:null,p:["Людей немного.","Небольшой рост потока.","Спокойно."]},
+{n:"Общественный туалет, набережная",k:"Сервис",x:906,y:287,c:[62,62,62],f:[10,12,10],s:35,r:55,a:"Закрыт на обслуживание, откроется вечером. Нужно подтверждение.",p:["Закрыт, поблизости других нет.","Без изменений.","Без изменений."]},
+{n:"Светофор, Ленина и Красина",k:"Доступная среда",x:797,y:160,c:[75,75,75],f:[40,50,45],s:45,r:72,a:"Звуковой сигнал для слабовидящих не работает.",p:["Переход работает, звукового сигнала нет.","Без изменений.","Без изменений."]}
 ];
 var st={l:"score",t:0,sel:null,b:0,ok:{}};
 var T=["сейчас","через 15 минут","через 30 минут"];
@@ -132,12 +151,12 @@ function val(p){var t=st.t,l=st.l;
  if(l=="status")return{g:p.s,v:p.s};
  return p.a?{g:0,v:"!"}:{g:100,v:"–"}}
 function $(i){return document.getElementById(i)}
-function draw(){
- var m="",h="";
+function mkdraw(){var k=V.w/(sv.clientWidth||340),m="",h="";
  P.forEach(function(p,i){var o=val(p),c=col(o.g),dim=(st.l=="alert"&&!p.a)?' opacity=".35"':"";
-  if(st.l=="flow")h+='<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(14+p.f[st.t]*.4)+'" fill="url(#hg)" opacity="'+(.25+p.f[st.t]/130)+'"/>';
-  m+='<g class="pt" tabindex="0" role="button" data-i="'+i+'" aria-label="'+p.n+', '+o.v+'"'+dim+'>'+(st.sel===i?'<circle class="pulse" cx="'+p.x+'" cy="'+p.y+'" r="15" fill="none" stroke="'+c+'" stroke-width="2"/>':"")+'<circle cx="'+p.x+'" cy="'+p.y+'" r="14" fill="'+c+'" stroke="var(--card)" stroke-width="2.5"/><text x="'+p.x+'" y="'+(p.y+4)+'">'+o.v+'</text></g>'});
- $("mk").innerHTML=m;$("heat").innerHTML=h;
+  if(st.l=="flow")h+='<circle cx="'+p.x+'" cy="'+p.y+'" r="'+(36+p.f[st.t]*.7)+'" fill="url(#hg)" opacity="'+(.3+p.f[st.t]/130)+'"/>';
+  m+='<g class="pt" tabindex="0" role="button" data-i="'+i+'" aria-label="'+p.n+', '+o.v+'"'+dim+'>'+(st.sel===i?'<circle cx="'+p.x+'" cy="'+p.y+'" r="'+17*k+'" fill="none" stroke="'+c+'" stroke-width="'+2.5*k+'"/>':"")+'<circle cx="'+p.x+'" cy="'+p.y+'" r="'+12*k+'" fill="'+c+'" stroke="var(--card)" stroke-width="'+2.5*k+'"/><text x="'+p.x+'" y="'+(p.y+4*k)+'" font-size="'+11*k+'">'+o.v+'</text></g>'});
+ $("mk").innerHTML=m;$("heat").innerHTML=h}
+function draw(){mkdraw();
  $("chips").innerHTML=L.map(function(a){return '<button aria-pressed="'+(st.l==a[0])+'" data-l="'+a[0]+'">'+a[1]+'</button>'}).join("");
  card();city()}
 function bar(n,v,g){return '<div class="bar"><span>'+n+'</span><div><i style="width:'+v+'%;background:'+col(g)+'"></i></div><span>'+v+'</span></div>'}
@@ -152,19 +171,38 @@ function city(){
  avg=Math.round(a.reduce(function(n,x){return n+x.s},0)/a.length),
  al=P.filter(function(p){return p.a}).length,
  pk=Math.max.apply(null,P.map(function(p){return p.f[st.t]}));
- $("kpi").innerHTML='<div><strong>'+avg+'</strong><span>средний индекс района</span></div><div><strong>'+al+'</strong><span>активных события</span></div><div><strong>'+pk+'%</strong><span>пик загрузки</span></div>';
- $("list").innerHTML=a.map(function(x){return '<button data-go="'+x.i+'"><b style="background:'+col(x.s)+'">'+x.s+'</b><span>'+x.p.n+'<br><span class="mut">'+(x.p.a||x.p.p[st.t])+'</span></span></button>'}).join("")}
+ $("kpi").innerHTML='<div><strong>'+avg+'</strong><span>средний индекс района</span></div><div><strong>'+al+'</strong><span>активных событий</span></div><div><strong>'+pk+'%</strong><span>пик загрузки</span></div>';
+ $("list").innerHTML=a.slice(0,8).map(function(x){return '<button data-go="'+x.i+'"><b style="background:'+col(x.s)+'">'+x.s+'</b><span>'+x.p.n+'<br><span class="mut">'+(x.p.a||x.p.p[st.t])+'</span></span></button>'}).join("")}
 function tab(n){["map","city"].forEach(function(k){$("t"+k).hidden=k!=n});
  document.querySelectorAll("[data-tab]").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab==n)})}
 document.addEventListener("click",function(e){
- var b=e.target.closest("[data-tab],[data-l],[data-go],.pt,#cf");if(!b)return;
+ var b=e.target.closest("[data-tab],[data-l],[data-go],[data-z],.pt,#cf");if(!b)return;
  if(b.dataset.tab)tab(b.dataset.tab);
  else if(b.dataset.l){st.l=b.dataset.l;draw()}
  else if(b.dataset.go){tab("map");st.sel=+b.dataset.go;draw();$("card").scrollIntoView({behavior:"smooth",block:"nearest"})}
  else if(b.id=="cf"){st.ok[st.sel]=1;st.b+=500;$("bonus").textContent="Бонусы: "+st.b+" МБ";card()}
+ else if(b.dataset.z)zoom(+b.dataset.z);
  else if(b.dataset.i){st.sel=+b.dataset.i;draw()}});
 document.addEventListener("keydown",function(e){if((e.key=="Enter"||e.key==" ")&&e.target.classList&&e.target.classList.contains("pt")){e.preventDefault();e.target.dispatchEvent(new MouseEvent("click",{bubbles:true}))}});
 $("tr").addEventListener("input",function(){st.t=+this.value;$("tl").textContent=T[st.t];draw()});
+var sd=11;function rr(){sd=sd*16807%2147483647;return sd/2147483647}
+function cell(x0,x1,y0,y1){var o="",y=y0,h,x,w;while(y<y1-8){h=Math.min(16+rr()*16,y1-y);x=x0;while(x<x1-8){w=Math.min(14+rr()*22,x1-x);if(rr()>.12)o+='<rect x="'+x.toFixed(0)+'" y="'+y.toFixed(0)+'" width="'+(w-3).toFixed(0)+'" height="'+(h-3).toFixed(0)+'" rx="2" opacity="'+(.5+rr()*.5).toFixed(2)+'"/>';x+=w}y+=h}return o}
+function trees(x0,y0,x1,y1,n){var o="";for(var i=0;i<n;i++)o+='<circle cx="'+(x0+rr()*(x1-x0)).toFixed(0)+'" cy="'+(y0+rr()*(y1-y0)).toFixed(0)+'" r="'+(2.5+rr()*3).toFixed(1)+'" fill="var(--good)" opacity=".4"/>';return o}
+function bld(){var Z=[],o="";function row(y0,y1,cs){cs.forEach(function(c){Z.push([c[0],c[1],y0,y1])})}
+var N=[[-95,412],[428,489],[505,592],[608,692],[708,789],[805,1070]],E=[[505,592],[608,692],[708,789],[805,1070]],S=[[-95,328],[346,489],[505,592],[608,789],[805,1070]],W=[[-95,328],[346,489],[505,592],[608,680]];
+row(-95,-14,N);row(2,44,N);row(60,152,[[-95,412],[428,489]]);row(60,97,E);row(113,152,E);row(168,230,S);
+row(246,358,[[-95,328],[346,489],[505,592],[608,690]]);row(246,318,[[694,789]]);row(246,285,[[805,900]]);row(374,436,W);row(452,500,W);
+Z.forEach(function(z){o+=cell(z[0],z[1],z[2],z[3])});return o}
+var sv=$("sv"),V={x:60,y:-60,w:740,h:540},B={x:-40,y:-100,w:1120,h:640},dr=null,moved=false;
+function setV(){V.x=Math.max(B.x,Math.min(B.x+B.w-V.w,V.x));V.y=Math.max(B.y,Math.min(B.y+B.h-V.h,V.y));sv.setAttribute("viewBox",V.x+" "+V.y+" "+V.w+" "+V.h);sv.style.touchAction=V.w<730?"none":"pan-y";mkdraw()}
+function zoom(d){var f=d>0?.65:1/.65,w=Math.min(740,Math.max(180,V.w*f)),h=w*540/740,cx=V.x+V.w/2,cy=V.y+V.h/2;if(d>0&&st.sel!==null){cx=P[st.sel].x;cy=P[st.sel].y}V.x=cx-w/2;V.y=cy-h/2;V.w=w;V.h=h;setV()}
+sv.addEventListener("pointerdown",function(e){dr={x:e.clientX,y:e.clientY,vx:V.x,vy:V.y}});
+sv.addEventListener("pointermove",function(e){if(!dr||V.w>=730)return;var k=V.w/sv.getBoundingClientRect().width,dx=e.clientX-dr.x,dy=e.clientY-dr.y;if(Math.abs(dx)+Math.abs(dy)>6)moved=true;if(moved){V.x=dr.vx-dx*k;V.y=dr.vy-dy*k;setV()}});
+sv.addEventListener("click",function(e){if(moved){e.stopPropagation();e.preventDefault()}},true);
+addEventListener("pointerup",function(){dr=null;setTimeout(function(){moved=false},60)});
+addEventListener("resize",mkdraw);
+$("bg").innerHTML=bld();
+$("trs").innerHTML=trees(74,66,332,148,70)+trees(104,176,246,224,16)+trees(274,176,324,224,8)+trees(124,254,324,326,22)+trees(632,174,720,226,10)+trees(644,250,766,310,8)+'<g fill="var(--acc)" opacity=".38"><rect x="650" y="256" width="40" height="42" rx="3"/><rect x="700" y="256" width="30" height="20" rx="3"/><rect x="700" y="284" width="36" height="22" rx="3"/><rect x="742" y="260" width="20" height="44" rx="3"/></g>';
 draw();
 </script>
 </body>
